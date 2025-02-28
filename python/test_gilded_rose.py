@@ -11,11 +11,33 @@ class GildedRoseTest(unittest.TestCase):
     #     gilded_rose.update_quality()
     #     self.assertEqual("fixme", items[0].name)
 
+    def test_normal_item_degrades_by_one(self):
+        items = [Item("Normal Item", 10, 20)]
+        gilded_rose = GildedRose(items)
+        gilded_rose.update_quality()
+        self.assertEqual(9, items[0].sell_in)
+        self.assertEqual(19, items[0].quality)
+
     def test_conjured_items_degrade_twice_as_fast(self):
         items = [Item("Conjured Mana Cake", 5, 10)]
         gilded_rose = GildedRose(items)
         gilded_rose.update_quality()
         assert items[0].quality == 8
+
+
+    def test_aged_brie_increases_in_quality(self):
+        items = [Item("Aged Brie", 5, 10)]
+        gilded_rose = GildedRose(items)
+        gilded_rose.update_quality()
+        self.assertEqual(4, items[0].sell_in)
+        self.assertEqual(11, items[0].quality)
+
+    def test_sulfuras_never_decreases(self):
+        items = [Item("Sulfuras, Hand of Ragnaros", 5, 80)]
+        gilded_rose = GildedRose(items)
+        gilded_rose.update_quality()
+        self.assertEqual(5, items[0].sell_in)
+        self.assertEqual(80, items[0].quality)
 
         
 if __name__ == '__main__':

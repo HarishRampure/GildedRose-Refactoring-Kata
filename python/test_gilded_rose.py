@@ -24,7 +24,6 @@ class GildedRoseTest(unittest.TestCase):
         gilded_rose.update_quality()
         assert items[0].quality == 8
 
-
     def test_aged_brie_increases_in_quality(self):
         items = [Item("Aged Brie", 5, 10)]
         gilded_rose = GildedRose(items)
@@ -38,6 +37,13 @@ class GildedRoseTest(unittest.TestCase):
         gilded_rose.update_quality()
         self.assertEqual(5, items[0].sell_in)
         self.assertEqual(80, items[0].quality)
+
+    def test_backstage_pass_increases_by_3_when_5_days_or_less(self):
+        items = [Item("Backstage passes to a TAFKAL80ETC concert", 5, 20)]
+        gilded_rose = GildedRose(items)
+        gilded_rose.update_quality()
+        self.assertEqual(4, items[0].sell_in)
+        self.assertEqual(23, items[0].quality, "Backstage pass should increase by 3 when <= 5 days")
 
         
 if __name__ == '__main__':

@@ -21,7 +21,6 @@ class GildedRose(object):
         Updates 'sell_in' and 'quality' for all items, including new conjured items.
         """
         for item in self.items:
-            
             #Sulfuras does not change.
             if item.name == "Sulfuras, Hand of Ragnaros":
                 continue
@@ -32,7 +31,6 @@ class GildedRose(object):
             # Conjured items degrade in Quality twice as fast as normal items
             if "Conjured" in item.name:
                 degrade_rate *= 2
-            
             if item.name == "Aged Brie":
                 self._update_aged_brie(item)
             elif item.name.startswith("Backstage passes"):
@@ -40,7 +38,6 @@ class GildedRose(object):
             else:
                 # all other items
                 self._update_normal_item(item, degrade_rate)
-
             if item.quality < 0:
                 item.quality = 0
             if item.quality > 50 and item.name != "Sulfuras, Hand of Ragnaros":
@@ -55,7 +52,22 @@ class GildedRose(object):
 
 
     def _update_backstage_pass(self, item):
-        pass
+        if item.sell_in < 0:
+            # Quality drops to 0 after the concert
+            item.quality = 0
+            return
+        
+        # default
+        item.quality += 1
+
+        # Quality increases by 2 when there are 10 days or less and by 3 when there are 5 days or less
+        # 10 days or less, add 1 more makes it +2
+        if item.sell_in < 10:
+            item.quality += 1
+        
+        # 5 days or less, add 1 more makes it +3
+        if item.sell_in < 5:
+            item.quality += 1
 
     def _update_normal_item(self, item, degrade_rate):
         item.quality -= degrade_rate
